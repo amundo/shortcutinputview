@@ -1,0 +1,32 @@
+# ShortcutInputView
+
+## ShortcutInputView
+
+Building an enhanced Input view which allows substitution 
+rules to be dynamically edited.   
+
+### DATA
+
+An Input.
+
+### PRESENTATION
+
+If triggered (how?), a modal popup with an editable
+table of substution rules appears. Users can type
+“before” and “after” rules, and they will be applied
+when typing in the input.
+
+### BEHAVIOR
+
+### MODIFIED DATA
+
+The value of the input is changed dynamically.
+
+### Enhancements
+
+* Could add Unicode.json and IPA.json search to the modal.
+* Could add an export mechanism.
+
+
+
+
