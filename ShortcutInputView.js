@@ -2,17 +2,26 @@ class ShortcutInputView {
   constructor({el, rules}){
     this.el = el;
     this._rules = rules || [];
+    this._aliases = [];
     this.sortRules();
 
     this.render();
-    //this.update();
+    this.load();
     this.listen();
   }
 
-  load(url){
-    fetch(url)
+  load(){
+    fetch('../convert/js/subfile.json')
       .then(r => r.json())
-      .then(rules => rules.forEach(rule => this._rules.push(rule)))
+      .then(aliases => this._aliases = aliases)
+  }
+
+  set aliases(aliases) {
+    this._aliases = aliases;
+  }
+
+  get aliases() {
+    return this._aliases;
   }
 
   set rules(rules) {
@@ -43,6 +52,7 @@ class ShortcutInputView {
     <button class=controls>⚙</button>
   </div>
   <div class="hidden overlay">
+    <button class=closeOverlay>close</button>
     <table class=rules>
       <thead>
         <tr>
@@ -51,7 +61,12 @@ class ShortcutInputView {
         </tr>
         <tr class=addRule>
           <th><input class=from></th>
-          <th><input class=to><button class=addRule>+</button></th>
+          <th>
+            <div style=display:flex; class=inputWithButton>
+              <input class=to>
+              <button class=addRule>+</button>
+            </div>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -85,22 +100,24 @@ class ShortcutInputView {
       value = value.replace(beforeRE, after)
     })
     this.input.value = value;
-
-    
   }
 
   get addRuleButton(){
     return this.el.querySelector('button.addRule');
   }
 
-  addRule(){
-    let from = this.el.querySelector('input.from');
-    let to   = this.el.querySelector('input.to');
+  get fromInput(){
+    return this.el.querySelector('input.from');
+  }
+  get toInput(){
+    return this.el.querySelector('input.to');
+  }
 
-    this._rules.push([from.value,to.value]);
-    [from,to].forEach(input => input.value = '');
+  addRule(){
+    this._rules.push([this.fromInput.value, this.toInput.value]);
+    [this.fromInput, this.toInput].forEach(input => input.value = '');
     this.renderRules();
-    from.focus();
+    this.fromInput.focus();
   }
 
   toggleRules(){  
@@ -111,6 +128,7 @@ class ShortcutInputView {
     this.addRuleButton.addEventListener('click', () => this.addRule())
     this.controlsButton.addEventListener('click', ev => this.toggleRules(ev))
     this.input.addEventListener('keyup', () => this.run())
+    document.addEventListener('keyup', keyupEvent => this.toggleRules)
   }
 }
 

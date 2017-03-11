@@ -1,20 +1,22 @@
 .shortcutInput {
   display: flex;
   border: 1px solid #ececec;
-  border-top-right-radius: .25em;
-  border-bottom-right-radius: .25em;
+  border-radius: .25em;
 }
 
 .shortcutInput input {
   flex: 1;
   line-height: 1.5;
   border:none;
+  border-radius: .25em;
 }
 
 .shortcutInput button.controls {
   width: 2em;
   border: none ;
   margin: 0;
+  border-top-left-radius: .25em;
+  border-bottom-left-radius: .25em;
 }
 
 .shortcut .overlay {
@@ -58,6 +60,12 @@ input {
 .shortcut .overlay table.rules  td, th {
   border: 1px solid #ececec;
   padding: .25em;
+}
+
+.shortcut .overlay table .addRule th {
+}
+
+.shortcut .overlay table .addRule th input {
 }
 
 .shortcut .overlay.hidden {
