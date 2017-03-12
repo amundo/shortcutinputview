@@ -49,6 +49,7 @@ class ShortcutInputView {
 
     let template = `
   <div class=shortcutInput>
+    <!-- input will be moved here -->
     <button class=controls>⚙</button>
   </div>
   <div class="hidden overlay">
@@ -93,8 +94,9 @@ class ShortcutInputView {
       .forEach(tr => tbody.insertAdjacentHTML('afterbegin', tr));
   }
 
-  run(clickEvent){
+  transliterate(clickEvent){
     let value = this.input.value;
+    this.sortRules();
     this._rules.forEach(([before, after]) => {
       let beforeRE = new RegExp(before, 'g');
       value = value.replace(beforeRE, after)
@@ -113,11 +115,16 @@ class ShortcutInputView {
     return this.el.querySelector('input.to');
   }
 
-  addRule(){
-    this._rules.push([this.fromInput.value, this.toInput.value]);
+  readRule(){
+    let [before, after] = [this.fromInput.value, this.toInput.value];
     [this.fromInput, this.toInput].forEach(input => input.value = '');
-    this.renderRules();
     this.fromInput.focus();
+    this.addRule(before, after);
+  }
+
+  addRule(before, after){
+    this._rules.push(before, after);
+    this.renderRules();
   }
 
   toggleRules(){  
@@ -125,9 +132,9 @@ class ShortcutInputView {
   }
 
   listen(){
-    this.addRuleButton.addEventListener('click', () => this.addRule())
+    this.addRuleButton.addEventListener('click', () => this.readRule())
     this.controlsButton.addEventListener('click', ev => this.toggleRules(ev))
-    this.input.addEventListener('keyup', () => this.run())
+    this.input.addEventListener('keyup', () => this.transliterate())
     document.addEventListener('keyup', keyupEvent => this.toggleRules)
   }
 }
