@@ -111,6 +111,7 @@ class ShortcutInputView {
   get fromInput(){
     return this.el.querySelector('input.from');
   }
+
   get toInput(){
     return this.el.querySelector('input.to');
   }
@@ -123,8 +124,18 @@ class ShortcutInputView {
   }
 
   addRule(before, after){
-    this._rules.push(before, after);
+    this._rules.push([before, after]);
     this.renderRules();
+  }
+
+  convert(){  
+    let value = this.toInput.value;
+    this._aliases.forEach(([before, after]) => {
+      if(value.includes(before)){
+        value = value.replace(new RegExp(before, 'g'), after)
+      }
+    })
+    this.toInput.value = value;
   }
 
   toggleRules(){  
@@ -135,9 +146,11 @@ class ShortcutInputView {
     this.addRuleButton.addEventListener('click', () => this.readRule())
     this.controlsButton.addEventListener('click', ev => this.toggleRules(ev))
     this.input.addEventListener('keyup', () => this.transliterate())
+    this.toInput.addEventListener('keyup', () => this.convert())
     document.addEventListener('keyup', keyupEvent => this.toggleRules)
   }
 }
+
 
 
 

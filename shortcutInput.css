@@ -20,7 +20,6 @@
 }
 
 .shortcut .overlay {
-  border: 1px solid gray;
   margin-left: 2em;
   overflow-y: auto;
   max-height: 80vh;
