@@ -4,7 +4,6 @@ class ShortcutInputView {
     this._rules = rules || [];
     this._aliases = [];
     this.sortRules();
-
     this.render();
     this.load();
     this.listen();
@@ -14,6 +13,7 @@ class ShortcutInputView {
     fetch('../convert/js/subfile.json')
       .then(r => r.json())
       .then(aliases => this._aliases = aliases)
+      .then(() => this.renderDatalist())
   }
 
   set aliases(aliases) {
@@ -64,7 +64,7 @@ class ShortcutInputView {
           <th><input class=from></th>
           <th>
             <div style=display:flex; class=inputWithButton>
-              <input class=to>
+              <input list=aliases class=to>
               <button class=addRule>+</button>
             </div>
           </th>
@@ -73,6 +73,7 @@ class ShortcutInputView {
       <tbody>
       </tbody>
     </table>
+    <datalist id=aliases></datalist>
   </div>
 `;
 
@@ -136,6 +137,13 @@ class ShortcutInputView {
       }
     })
     this.toInput.value = value;
+  }
+
+  renderDatalist(){  
+    let datalist = this.el.querySelector('datalist#aliases');
+    this._aliases.forEach(([before, after])=>{
+      datalist.insertAdjacentHTML('beforeEnd', `<option value="${before}"></option>`)
+    })
   }
 
   toggleRules(){  
