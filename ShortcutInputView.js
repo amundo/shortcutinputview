@@ -72,6 +72,7 @@ class ShortcutInputView {
       <tbody>
       </tbody>
     </table>
+    <a download class=exportRules href=#>export Rules</a>
     <datalist id=aliases></datalist>
   </div>
 `;
@@ -158,6 +159,16 @@ console.log(`remove: ${before}, ${after}`);
     })
   }
 
+  exportRules(){  
+    let a = document.createElement('a');
+    a.setAttribute('download',"rules.json");
+    let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(JSON.stringify(this._rules));
+    a.href = dataUri;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
   toggleRules(){  
     this.el.querySelector('.overlay').classList.toggle('hidden');
   }
@@ -176,6 +187,11 @@ console.log(`remove: ${before}, ${after}`);
         this.removeRule(before, after);
       }
     })
+
+    this.el.addEventListener('click', clickEvent => {
+      if(clickEvent.target.matches('.exportRules')){ this.exportRules() };
+    })
+
     document.addEventListener('keyup', keyupEvent => this.toggleRules)
   }
 }
