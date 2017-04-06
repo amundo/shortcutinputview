@@ -53,7 +53,6 @@ class ShortcutInputView {
     <button class=controls>⚙</button>
   </div>
   <div class="hidden overlay">
-    <button class=closeOverlay>close</button>
     <table class=rules>
       <thead>
         <tr>
@@ -91,7 +90,13 @@ class ShortcutInputView {
     let tbody = this.el.querySelector('tbody');
     tbody.innerHTML = '';
     this._rules
-      .map(([before,after]) => `<tr><td>${before}</td><td>${after}</td></tr>`)
+      .map(([before,after]) => `
+<tr>
+  <td class=before>${before}</td>
+  <td class=after>${after}</td>
+  <td><button class=removeRule>x</button></td>
+</tr>
+`)
       .forEach(tr => tbody.insertAdjacentHTML('afterbegin', tr));
   }
 
@@ -129,6 +134,13 @@ class ShortcutInputView {
     this.renderRules();
   }
 
+  removeRule(before, after){
+console.log(`remove: ${before}, ${after}`);
+    console.log(this._rules.filter(rule => !(rule[0] == before && rule[1] == after)));
+    this._rules = this._rules.filter(rule => !(rule[0] == before && rule[1] == after));
+    this.renderRules();
+  }
+
   convert(){  
     let value = this.toInput.value;
     this._aliases.forEach(([before, after]) => {
@@ -155,6 +167,15 @@ class ShortcutInputView {
     this.controlsButton.addEventListener('click', ev => this.toggleRules(ev))
     this.input.addEventListener('keyup', () => this.transliterate())
     this.toInput.addEventListener('keyup', () => this.convert())
+    this.el.addEventListener('click', clickEvent => {
+      if(clickEvent.target.matches('.removeRule')){
+        let row = clickEvent.target.closest('tr'); 
+        let before = row.querySelector('td.before').textContent;
+        let after = row.querySelector('td.after').textContent;
+        row.remove();
+        this.removeRule(before, after);
+      }
+    })
     document.addEventListener('keyup', keyupEvent => this.toggleRules)
   }
 }
