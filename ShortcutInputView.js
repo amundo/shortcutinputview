@@ -10,7 +10,7 @@ class ShortcutInputView {
   }
 
   load(){
-    fetch('../convert/js/subfile.json')
+    fetch('subfile.json')
       .then(r => r.json())
       .then(aliases => this._aliases = aliases)
       .then(() => this.renderDatalist())
